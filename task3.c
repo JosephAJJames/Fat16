@@ -34,9 +34,9 @@ typedef struct __attribute__((__packed__))
     uint8_t BS_FilSysType[8];
 } BootSector;
 
-unsigned char *searchFile(int byteOffset, int numOfBytesToRead, char *path)
+char *searchFile(int byteOffset, int numOfBytesToRead, char *path)
 {
-    unsigned char *buffer = malloc(numOfBytesToRead);
+    char *buffer = malloc(numOfBytesToRead);
 
     int file = open(path, O_RDONLY | O_CREAT);
 
@@ -51,12 +51,12 @@ unsigned char *searchFile(int byteOffset, int numOfBytesToRead, char *path)
         }
         else
         {
-            buffer = "Theres's been an error moving the file pointer.";
+            buffer = "";
         }
     }
     else
     {
-        buffer = "There's been an error opening the files";
+        buffer = "";
     }
     return buffer;
 }
@@ -142,9 +142,19 @@ int main()
     pointer->BPB_FATSz16 = toFillValues[6];    // Sectors in FAT (FAT12 or FAT16)
     pointer->BPB_TotSec32 = toFillValues[7];   // Sectors if BPB_TotSec16 == 0
     strcpy(pointer->BS_VolLab, string);        // Non zero terminated string
-
     // load the first fat
-    int fat1StartSector = pointer->BPB_RsvdSecCnt;
-    int fat1Offset = fat1StartSector * pointer->BPB_BytsPerSec;
-    unsigned char firstFat = searchFile(fat1Offset, fat1Offset, path);
+    uint16_t FAT_Offset = pointer->BPB_RsvdSecCnt * pointer->BPB_BytsPerSec;
+    uint16_t FAT_Size = pointer->BPB_FATSz16 * pointer->BPB_BytsPerSec;
+    uint16_t buffer[FAT_Size];
+    int file = open("fat16.img", O_RDONLY | O_CREAT);
+    off_t offset = lseek(file, FAT_Offset, SEEK_SET);
+    size_t readFile = read(file, buffer, FAT_Size);
+    uint16_t currentCluster = 5; // starting cluster
+    int count = 0;
+    while (currentCluster < 0xfff8)
+    {
+        printf("%d ->", currentCluster);
+        currentCluster = buffer[currentCluster];
+    }
+    printf("%d\n", currentCluster);
 }
