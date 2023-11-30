@@ -47,6 +47,7 @@ char *searchFile(int byteOffset, int numOfBytesToRead, char *path)
         if (offset != -1)
         {
             size_t readFile = read(file, buffer, numOfBytesToRead);
+            close(file);
             return buffer;
         }
         else
@@ -58,7 +59,15 @@ char *searchFile(int byteOffset, int numOfBytesToRead, char *path)
     {
         buffer = "";
     }
+    close(file);
     return buffer;
+}
+
+void task4(BootSector *pointer, char path[])
+{
+    int offset = (pointer->BPB_RsvdSecCnt * pointer->BPB_BytsPerSec) + (pointer->BPB_NumFATs * pointer->BPB_FATSz16 * pointer->BPB_BytsPerSec);
+    printf("offset: %d", offset);
+    char *buffer = searchFile(offset, pointer->BPB_RootEntCnt, path);
 }
 
 int main()
@@ -153,11 +162,10 @@ int main()
     int count = 0;
     while (currentCluster < 0xfff8)
     {
-        printf("%d ->", currentCluster);
+        printf(" %d ->", currentCluster);
         currentCluster = buffer[currentCluster];
     }
     printf("%d\n", currentCluster);
-    uint16_t RootDir_Offset = pointer->BPB_RsvdSecCnt + (pointer->BPB_NumFATs * pointer->BPB_FATSz16);
-    off_t offset = lseek(file, RootDir_Offset, SEEK_SET);
-    uint16_t buffer[pointer->BPB_RootEntCnt];
+    close(file);
+    task4(pointer, path);
 }
