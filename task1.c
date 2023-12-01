@@ -22,10 +22,11 @@ int main()
             char buffer[numOfBytesToRead];
             size_t readFile = read(file, buffer, numOfBytesToRead);
             printf("%s", buffer);
+            close(file);
         }
         else
         {
-            printf("Theres's been an error moving the file pointer.");
+            printf("Theres's been an error moving the file bootSectorPointer.");
             return 1;
         }
     }
@@ -34,4 +35,5 @@ int main()
         printf("There's been an error opening the files");
         return 1;
     }
+    close(file);
 }

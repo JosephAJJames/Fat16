@@ -64,7 +64,7 @@ char *searchFile(int byteOffset, int numOfBytesToRead, char *path)
 int main()
 {
     BootSector bootSector;
-    BootSector *pointer = &bootSector;
+    BootSector *bootSectorPointer = &bootSector;
     int toFillValues[8];
     int counter = 0;
     int result = 0;
@@ -133,18 +133,18 @@ int main()
                toFillValues[x]);
     }
     printf("\n");
-    pointer->BPB_BytsPerSec = toFillValues[0]; // Bytes per Sector
-    pointer->BPB_SecPerClus = toFillValues[1]; // Sectors per Cluster
-    pointer->BPB_RsvdSecCnt = toFillValues[2]; // Reserved Sector Count
-    pointer->BPB_NumFATs = toFillValues[3];    // Number of copies of FAT
-    pointer->BPB_RootEntCnt = toFillValues[4]; // FAT12/FAT16: size of root DIR
-    pointer->BPB_TotSec16 = toFillValues[5];   // Sectors, may be 0, see below
-    pointer->BPB_FATSz16 = toFillValues[6];    // Sectors in FAT (FAT12 or FAT16)
-    pointer->BPB_TotSec32 = toFillValues[7];   // Sectors if BPB_TotSec16 == 0
-    strcpy(pointer->BS_VolLab, string);        // Non zero terminated string
+    bootSectorPointer->BPB_BytsPerSec = toFillValues[0]; // Bytes per Sector
+    bootSectorPointer->BPB_SecPerClus = toFillValues[1]; // Sectors per Cluster
+    bootSectorPointer->BPB_RsvdSecCnt = toFillValues[2]; // Reserved Sector Count
+    bootSectorPointer->BPB_NumFATs = toFillValues[3];    // Number of copies of FAT
+    bootSectorPointer->BPB_RootEntCnt = toFillValues[4]; // FAT12/FAT16: size of root DIR
+    bootSectorPointer->BPB_TotSec16 = toFillValues[5];   // Sectors, may be 0, see below
+    bootSectorPointer->BPB_FATSz16 = toFillValues[6];    // Sectors in FAT (FAT12 or FAT16)
+    bootSectorPointer->BPB_TotSec32 = toFillValues[7];   // Sectors if BPB_TotSec16 == 0
+    strcpy(bootSectorPointer->BS_VolLab, string);        // Non zero terminated string
     // load the first fat
-    uint16_t FAT_Offset = pointer->BPB_RsvdSecCnt * pointer->BPB_BytsPerSec;
-    uint16_t FAT_Size = pointer->BPB_FATSz16 * pointer->BPB_BytsPerSec;
+    uint16_t FAT_Offset = bootSectorPointer->BPB_RsvdSecCnt * bootSectorPointer->BPB_BytsPerSec;
+    uint16_t FAT_Size = bootSectorPointer->BPB_FATSz16 * bootSectorPointer->BPB_BytsPerSec;
     uint16_t buffer[FAT_Size];
     int file = open("fat16.img", O_RDONLY | O_CREAT);
     off_t offset = lseek(file, FAT_Offset, SEEK_SET);

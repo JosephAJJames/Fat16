@@ -51,7 +51,7 @@ unsigned char *searchFile(int byteOffset, int numOfBytesToRead, char *path)
         }
         else
         {
-            buffer = "Theres's been an error moving the file pointer.";
+            buffer = "Theres's been an error moving the file bootSectorPointer.";
         }
     }
     else
@@ -64,7 +64,7 @@ unsigned char *searchFile(int byteOffset, int numOfBytesToRead, char *path)
 int main()
 {
     BootSector bootSector;
-    BootSector *pointer = &bootSector;
+    BootSector *bootSectorPointer = &bootSector;
     int toFillValues[8];
     int counter = 0;
     int result = 0;
@@ -142,13 +142,13 @@ int main()
                toFillValues[x]);
     }
     printf("\n");
-    pointer->BPB_BytsPerSec = toFillValues[0];
-    pointer->BPB_SecPerClus = toFillValues[1];
-    pointer->BPB_RsvdSecCnt = toFillValues[2];
-    pointer->BPB_NumFATs = toFillValues[3];
-    pointer->BPB_RootEntCnt = toFillValues[4];
-    pointer->BPB_TotSec16 = toFillValues[5];
-    pointer->BPB_FATSz16 = toFillValues[6];
-    pointer->BPB_TotSec32 = toFillValues[7];
-    strcpy(pointer->BS_VolLab, string);
+    bootSectorPointer->BPB_BytsPerSec = toFillValues[0];
+    bootSectorPointer->BPB_SecPerClus = toFillValues[1];
+    bootSectorPointer->BPB_RsvdSecCnt = toFillValues[2];
+    bootSectorPointer->BPB_NumFATs = toFillValues[3];
+    bootSectorPointer->BPB_RootEntCnt = toFillValues[4];
+    bootSectorPointer->BPB_TotSec16 = toFillValues[5];
+    bootSectorPointer->BPB_FATSz16 = toFillValues[6];
+    bootSectorPointer->BPB_TotSec32 = toFillValues[7];
+    strcpy(bootSectorPointer->BS_VolLab, string);
 }
